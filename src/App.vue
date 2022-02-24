@@ -1,15 +1,20 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <CompteurDeTruc v-for="(el, index) in liste" :key="index" :nom="el"/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CompteurDeTruc from './components/CompteurDeTruc.vue'
 
 export default {
   name: 'App',
+  data: function(){
+    return {
+        liste : ['el1', 'el2', 'el3']
+    }
+  },
   components: {
-    HelloWorld
+    CompteurDeTruc
   }
 }
 </script>
