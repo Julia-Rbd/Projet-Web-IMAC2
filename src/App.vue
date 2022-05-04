@@ -1,6 +1,5 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <!--<CompteurDeTruc v-for="(el, index) in liste" :key="index" :nom="el"/>-->
   <div id="colonnes">
     <ColonneReddit
       v-for="(el, index) in liste"
@@ -8,40 +7,54 @@
       :nom="el"
       :cle="index"
       v-on:CloseColonne="closedColonne"
+      :api="reddit"
     />
-    <form onsubmit="return false">
-      <input v-model="this.titre_nouvelle_colonne" />
-      <button @click="addColonne()"> Nouvelle colonne </button>
-    </form>
+    <SubResearch
+      :api="reddit"
+      v-on:SubredditSelection="addColonne"
+    />
   </div>
 </template>
 
 <script>
-//import CompteurDeTruc from './components/CompteurDeTruc.vue'
 import ColonneReddit from './components/ColonneReddit.vue'
+import { Reddit } from '@/Reddit.js'
+import SubResearch from './components/SubResearch.vue'
 
 export default {
   name: 'App',
   data: function(){
     return {
-        liste : ['colonne1', 'colonne2', 'colonne3', 'colonne4'],
-        titre_nouvelle_colonne : ""
+        liste : [],
+        reddit : new Reddit(this.redditReady.bind(this))
     }
   },
   methods: {
     closedColonne(cle){
       console.log("colonne " + cle + " fermée")
       this.liste.splice(cle,1)
+      localStorage.liste = this.liste
     },
-    addColonne(){
-      console.log("colonne " + this.titre_nouvelle_colonne + " ouverte")
-      this.liste.push(this.titre_nouvelle_colonne)
-      this.titre_nouvelle_colonne = ""
+    addColonne(subredditclicked){
+      console.log("colonne " + subredditclicked + " ouverte")
+      this.liste.push(subredditclicked)
+      localStorage.liste = this.liste
+    },
+    redditReady(){
+      console.log("reddit is ready")
+      this.reddit.get('/subreddits/popular')
+      .then(response=>response.json())
+      .then((object)=>{
+        console.log(object)
+      })
+      if(localStorage.getItem("liste")){
+        this.liste = localStorage.liste.split(",")
+      }
     }
   },
   components: {
-    //CompteurDeTruc,
-    ColonneReddit
+    ColonneReddit,
+    SubResearch
   }
 }
 

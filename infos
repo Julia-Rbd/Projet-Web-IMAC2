@@ -1,0 +1,5 @@
+les objets de type t3 représentent des link
+si le flag is_self = true, l'attribut selftext contient du texte
+
+is_reddit_media_domain indique si c'est un media (pas un texte), le lien du media est dans l'attribut url
+is_video si c'es tune vidéo (pas une image)

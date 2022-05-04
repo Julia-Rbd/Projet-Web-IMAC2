@@ -1,0 +1,45 @@
+<template>
+  <div>
+    <input
+      v-model="research"
+      v-on:keydown.enter="doResearch"
+    />
+    <p> {{research}} </p>
+    <p v-for="el in subreddit_names"
+      :key="el"
+      @click="emitevent(el)"
+    >
+        {{el}}
+    </p>
+  </div>
+</template>
+
+<script>
+  import { Reddit } from '@/Reddit.js'
+  export default {
+    name: 'SubResearch',
+    data: function() {
+      return {
+        research : "",
+        subreddit_names : []
+      }
+    },
+    methods: {
+      doResearch : function(){
+        console.log("research done")
+        this.api.get('/subreddits/search?q=' + this.research)
+        .then(response=>response.json())
+        .then((object)=>{
+          console.log(object)
+          this.subreddit_names = object.data.children.map(x => x.data.display_name)
+        })
+      },
+      emitevent : function(subredditclicked){
+        this.$emit("SubredditSelection", subredditclicked)
+      }
+    },
+    props: {
+      api : Reddit
+    }
+  }
+</script>
