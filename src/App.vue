@@ -1,5 +1,4 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
   <div id="colonnes">
     <ColonneReddit
       v-for="(el, index) in liste"
@@ -61,16 +60,23 @@ export default {
 </script>
 
 <style>
-  #app {
+  #app, body, html, #colonnes {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
+    max-height: 100%;
+    height : 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
   }
   #colonnes {
     display: flex;
     flex-direction: row;
+  }
+  body{
+    background-color: #ffffff;
   }
 </style>

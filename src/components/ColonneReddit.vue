@@ -1,23 +1,21 @@
 <template>
-  <div>
+  <div class="Col_this">
     <p> {{nom}} </p>
     <button v-on:click="emitCustomEvent"> {{"X"}} </button>     <!--//bouton pour fermer la colonne-->
-    <div class="colonne_d_images">
-      <div v-for="p in posts"
-        :key="p.id"
-      >
-      <p v-if="p.is_self"> {{p.selftext}} </p>
-      <img
-        v-else-if="p.is_reddit_media_domain && !p.is_video"
-        v-bind:src="p.url"
+    <div class="Col_posts">
+      <PostReddit
+        v-for="p in posts"
+        :key = "p.id"
+        :post = "p"
       />
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { Reddit } from '@/Reddit.js'
+import PostReddit from './PostReddit.vue'
+
 export default {
   name: 'ColonneReddit',
   emits: ["CloseColonne"],
@@ -44,21 +42,34 @@ export default {
     nom: String,
     cle: Number,
     api : Reddit
+  },
+  components: {
+    PostReddit
   }
 }
 </script>
 
 <style>
-  div .colonne_d_images {
+  div .Col_this{
+    max-height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    max-width: 300px;
     margin-left: 5px;
   }
-  div .colonne_d_images img{
+  div .Col_posts {
+    max-width: 300px;
+    overflow-y : scroll;
+    box-sizing: border-box;
+  }
+  div .Col_posts img{
     width: 100%;
   }
-  div .colonne_d_images p{
+  div .Col_posts p{
     max-height: 200px;
     overflow: auto;
   }
