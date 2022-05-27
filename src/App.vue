@@ -1,4 +1,9 @@
 <template>
+  <header>
+    <h2>
+      Reddit project
+    </h2>
+  </header>
   <div id="colonnes">
     <ColonneReddit
       v-for="(el, index) in liste"
@@ -13,6 +18,9 @@
       v-on:SubredditSelection="addColonne"
     />
   </div>
+  <footer>
+        <p>© 2022 Julia Raybaudi</p>
+  </footer>
 </template>
 
 <script>

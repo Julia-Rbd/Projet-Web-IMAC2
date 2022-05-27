@@ -24,6 +24,11 @@
         subreddit_names : []
       }
     },
+    computed: {
+      sorted(){
+          return this.sortedListByDate();
+      }
+    },
     methods: {
       doResearch : function(){
         console.log("research done")
@@ -36,6 +41,9 @@
       },
       emitevent : function(subredditclicked){
         this.$emit("SubredditSelection", subredditclicked)
+      },
+      sortedListByDate: function() {
+        return this.subreddit_names.sort((a, b) => a.created > b.created ); //object.created
       }
     },
     props: {
