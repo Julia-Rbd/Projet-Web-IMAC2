@@ -6,17 +6,24 @@
   </header>
   <div id="colonnes">
     <ColonneReddit
-      v-for="(el, index) in liste"
+      v-for="(el, index) in listeTriee"
       :key="el"
       :nom="el"
       :cle="index"
       v-on:CloseColonne="closedColonne"
       :api="reddit"
     />
+    <div>
+    <h4>Trier par</h4>
+    <select v-model="selectedSort">
+      <option v-for="(func, id) in sortFunctions" :key="id" @change="triChange">{{func.name}}</option>
+    </select>
+    <h4>Recherche</h4>
     <SubResearch
       :api="reddit"
       v-on:SubredditSelection="addColonne"
     />
+    </div>
   </div>
   <footer>
         <p>© 2022 Julia Raybaudi</p>
@@ -33,19 +40,45 @@ export default {
   data: function(){
     return {
         liste : [],
-        reddit : new Reddit(this.redditReady.bind(this))
+        reddit : new Reddit(this.redditReady.bind(this)),
+        selectedSort: undefined,
+        sortFunctions: [
+          {
+            name: 'ne pas trier',
+            func: undefined
+          },
+          {
+            name: 'nom',
+            func: (a,b) => a.display_name.localeCompare(b.display_name)
+          },
+          {
+            name: 'date de creation',
+            func: (a,b) => a.created - b.created
+          }
+        ]
+    }
+  },
+  computed: {
+    listeTriee() {
+      let select = this.sortFunctions.find(x => x.name == this.selectedSort)
+
+      if (select === undefined) {
+        return this.liste.map(x => x.display_name)
+      } else {
+        return this.liste.slice().sort(select.func).map(x => x.display_name)
+      }
     }
   },
   methods: {
     closedColonne(cle){
       console.log("colonne " + cle + " fermée")
       this.liste.splice(cle,1)
-      localStorage.liste = this.liste
+      localStorage.liste = JSON.stringify(this.liste)
     },
     addColonne(subredditclicked){
       console.log("colonne " + subredditclicked + " ouverte")
       this.liste.push(subredditclicked)
-      localStorage.liste = this.liste
+      localStorage.liste = JSON.stringify(this.liste)
     },
     redditReady(){
       console.log("reddit is ready")
@@ -55,7 +88,7 @@ export default {
         console.log(object)
       })
       if(localStorage.getItem("liste")){
-        this.liste = localStorage.liste.split(",")
+        this.liste = JSON.parse(localStorage.liste)
       }
     }
   },

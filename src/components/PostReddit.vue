@@ -21,6 +21,7 @@ export default {
   methods: {
   },
   data: function() {
+    return {}
   },
   props: {
     post : Object,

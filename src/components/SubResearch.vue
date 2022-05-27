@@ -6,10 +6,10 @@
     />
     <p> {{research}} </p>
     <p v-for="el in subreddit_names"
-      :key="el"
+      :key="el.display_name"
       @click="emitevent(el)"
     >
-        {{el}}
+        {{el.display_name}}
     </p>
   </div>
 </template>
@@ -36,7 +36,7 @@
         .then(response=>response.json())
         .then((object)=>{
           console.log(object)
-          this.subreddit_names = object.data.children.map(x => x.data.display_name)
+          this.subreddit_names = object.data.children.map(x => x.data)
         })
       },
       emitevent : function(subredditclicked){
